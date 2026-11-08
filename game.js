@@ -9,8 +9,8 @@ function drawWelcomeScreen() {
   ctx.textAlign = "center";
 
   ctx.fillStyle = "#6ee7b7";
-  ctx.font = "bold 36px Arial";
-  ctx.fillText("TAL KIDS GAME", 400, 160);
+  ctx.font = "bold 25px Arial";
+  ctx.fillText("Jeu inventé par les enfants grâce à l'IA", 400, 160);
 
   ctx.fillStyle = "#ffffff";
   ctx.font = "24px Arial";

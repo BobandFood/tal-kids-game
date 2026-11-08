@@ -10,7 +10,7 @@ function drawWelcomeScreen() {
 
   ctx.fillStyle = "#6ee7b7";
   ctx.font = "bold 25px Arial";
-  ctx.fillText("Jeu inventé par les enfants grâce à l'IA", 400, 160);
+  ctx.fillText("Jeux IA", 400, 160);
 
   ctx.fillStyle = "#ffffff";
   ctx.font = "24px Arial";

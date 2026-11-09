@@ -2,25 +2,33 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-function drawWelcomeScreen() {
-  ctx.fillStyle = "#202d44";
+const personnages = new Image();
+personnages.src = "personnages.png";
+
+function dessinerJeu() {
+  // Fond bleu ciel
+  ctx.fillStyle = "#DDF5FF";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  // Titre du jeu
   ctx.textAlign = "center";
+  ctx.fillStyle = "#51358A";
+  ctx.font = "bold 42px Arial";
+  ctx.fillText("JEU IA", 400, 58);
 
-  ctx.fillStyle = "#6ee7b7";
-  ctx.font = "bold 25px Arial";
-  ctx.fillText("Jeux IA", 400, 160);
+  // Image des deux personnages
+  if (personnages.complete && personnages.naturalWidth > 0) {
+    ctx.drawImage(personnages, 180, 75, 440, 330);
+  }
 
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "24px Arial";
-  ctx.fillText("Notre futur jeu vidéo !", 400, 220);
-
-  ctx.font = "18px Arial";
-  ctx.fillText("Imaginé par les enfants", 400, 270);
-
-  ctx.fillStyle = "#fbbf24";
-  ctx.fillText("Bientôt, notre aventure commence...", 400, 340);
+  // Message
+  ctx.fillStyle = "#51358A";
+  ctx.font = "20px Arial";
+  ctx.fillText("Nos deux héros sont prêts !", 400, 430);
 }
 
-drawWelcomeScreen();
+personnages.onload = dessinerJeu;
+personnages.onerror = () => {
+  console.error("Impossible de charger personnages.png");
+};
+dessinerJeu();

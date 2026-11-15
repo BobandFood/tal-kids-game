@@ -3,7 +3,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Tal Kids Game</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -14,11 +14,28 @@
 
     <canvas id="game" width="800" height="450"></canvas>
 
+    <section class="touch-controls" aria-label="Commandes tactiles">
+      <p class="touch-help">Maintiens une flèche pour avancer. Tu peux avancer et sauter en même temps !</p>
+      <fieldset><legend>Fille</legend><div class="buttons">
+        <button type="button" data-key="KeyA" aria-label="Fille : Gauche">←</button>
+        <button type="button" data-key="KeyD" aria-label="Fille : Droite">→</button>
+        <button type="button" data-key="KeyW" aria-label="Fille : Sauter">↑ Saut</button>
+        <button type="button" data-key="KeyS" aria-label="Fille : Hip-hop">Hip-hop</button>
+      </div></fieldset>
+      <fieldset><legend>Garçon</legend><div class="buttons">
+        <button type="button" data-key="ArrowLeft" aria-label="Garçon : Gauche">←</button>
+        <button type="button" data-key="ArrowRight" aria-label="Garçon : Droite">→</button>
+        <button type="button" data-key="ArrowUp" aria-label="Garçon : Sauter">↑ Saut</button>
+        <button type="button" data-key="ArrowDown" aria-label="Garçon : Siiiu">Siiiu</button>
+      </div></fieldset>
+    </section>
+
     <p id="message">
-      Notre aventure commence bientôt...
+      Sur téléphone, utilise les boutons. Le mode paysage offre plus de place.
     </p>
   </main>
 
   <script src="game.js"></script>
+  <script src="mobile-controls.js"></script>
 </body>
 </html>

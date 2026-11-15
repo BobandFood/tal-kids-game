@@ -5,6 +5,8 @@ const ctx = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 450;
 const touches = {};
+// Separate touch state keeps keyboard and fingers independent.
+const touchesMobiles = new Set();
 let tick = 0;
 
 const sol = 385;
@@ -94,10 +96,10 @@ function deplacer(personnage, gauche, droite, saut) {
   if (personnage.landing > 0) personnage.landing--;
   personnage.vx = 0;
 
-  if (touches[gauche]) personnage.vx = -personnage.vitesse;
-  if (touches[droite]) personnage.vx = personnage.vitesse;
+  if ((touches[gauche] || touchesMobiles.has(gauche))) personnage.vx = -personnage.vitesse;
+  if ((touches[droite] || touchesMobiles.has(droite))) personnage.vx = personnage.vitesse;
 
-  if (touches[saut] && personnage.auSol) {
+  if ((touches[saut] || touchesMobiles.has(saut)) && personnage.auSol) {
     personnage.jumpAge = 0;
     personnage.vy = -11;
     personnage.auSol = false;

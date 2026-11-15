@@ -39,12 +39,43 @@ fille.leftImage.src = "assets/fille/left.png";
 garcon.image.src = "assets/garcon/right.png";
 garcon.leftImage.src = "assets/garcon/left.png";
 
+const specialDefinitions = {
+  hiphop: { durations: [180,220,220,220,220,220,240,220,220,220,600,180] },
+  siiu: { durations: [120,160,180,180,140,140,140,140,180,300,700,180] }
+};
+for (const [p, name, folder] of [[fille, "hiphop", "fille"], [garcon, "siiu", "garcon"]]) {
+  p.specialName = name;
+  p.specialImage = new Image();
+  p.specialImage.src = `assets/${folder}/special.png`;
+  p.special = null;
+}
+function commencerSpecial(p) {
+  if (p.special || !p.auSol || !p.specialImage.complete ||
+      p.specialImage.naturalWidth !== 1536 || p.specialImage.naturalHeight !== 512) return;
+  p.special = { elapsed: 0, frame: 0 };
+  p.vx = p.vy = p.landing = p.movingTicks = 0;
+}
+function avancerSpecial(p, delta) {
+  const action = p.special;
+  action.elapsed += delta;
+  const durations = specialDefinitions[p.specialName].durations;
+  let end = 0;
+  for (let i = 0; i < durations.length; i++) {
+    end += durations[i];
+    if (action.elapsed < end) { action.frame = i; return; }
+  }
+  p.special = null;
+  p.animTick = p.movingTicks = p.landing = 0;
+}
 window.addEventListener("keydown", (e) => {
+  const firstPress = !touches[e.code] && !e.repeat;
+  if (firstPress && e.code === "KeyS") commencerSpecial(fille);
+  if (firstPress && e.code === "ArrowDown") commencerSpecial(garcon);
   touches[e.code] = true;
 
   if ([
     "ArrowLeft", "ArrowRight", "ArrowUp",
-    "KeyA", "KeyD", "KeyW"
+    "KeyA", "KeyD", "KeyW", "KeyS", "ArrowDown"
   ].includes(e.code)) {
     e.preventDefault();
   }
@@ -57,6 +88,7 @@ window.addEventListener("keyup", (e) => {
 window.addEventListener("blur", () => { for (const code in touches) touches[code] = false; });
 
 function deplacer(personnage, gauche, droite, saut) {
+  if (personnage.special) return;
   const wasGrounded = personnage.auSol;
   personnage.animTick++;
   if (personnage.landing > 0) personnage.landing--;
@@ -108,6 +140,15 @@ function animationFrame(p) {
   return [0, phase < 210 ? Math.floor(phase / 35) % 2 : [2,3,4,5][Math.min(3,Math.floor((phase-210)/8))]];
 }
 function dessinerPersonnage(p) {
+  if (p.special) {
+    const frame = p.special.frame;
+    const size = 145;
+    // Jump height follows the celebration; the hitbox stays grounded.
+    const lift = p.specialName === "siiu" ? [0,0,0,0,22,48,52,32,0,0,0,0][frame] : 0;
+    ctx.drawImage(p.specialImage, (frame % 6)*256, Math.floor(frame/6)*256, 256, 256,
+      p.x + p.largeur/2-size/2, p.y+p.hauteur-244/256*size-lift, size, size);
+    return;
+  }
   const [row, frame] = animationFrame(p);
   const image = p.direction === "left" ? p.leftImage : p.image;
   if (image.complete && image.naturalWidth === 1536) {
@@ -118,7 +159,12 @@ function dessinerPersonnage(p) {
   }
 }
 
-function dessiner() {
+let lastTime = null;
+function dessiner(now) {
+  const delta = lastTime === null || !Number.isFinite(now) ? 0 : Math.min(50, Math.max(0, now-lastTime));
+  if (Number.isFinite(now)) lastTime = now;
+  // Update after rendering so every action starts on its first pose.
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Ciel
@@ -137,15 +183,16 @@ function dessiner() {
 
   // Commandes
   ctx.font = "16px Arial";
-  ctx.fillText("Fille : A / D / W", 190, 80);
-  ctx.fillText("Garçon : ← / → / ↑", 605, 80);
+  ctx.fillText("Fille : A / D / W • S : hip-hop", 190, 80);
+  ctx.fillText("Garçon : ← / → / ↑ • ↓ : Siiiu", 605, 80);
 
-  deplacer(fille, "KeyA", "KeyD", "KeyW");
+  deplacer(fille, "KeyA", "KeyD", "KeyW", "KeyS", "ArrowDown");
   deplacer(garcon, "ArrowLeft", "ArrowRight", "ArrowUp");
 
   dessinerPersonnage(fille);
   dessinerPersonnage(garcon);
 
+  for (const p of [fille, garcon]) if (p.special) avancerSpecial(p, delta);
   requestAnimationFrame(dessiner);
 }
 

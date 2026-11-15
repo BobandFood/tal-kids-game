@@ -2,7 +2,10 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
+canvas.width = 800;
+canvas.height = 450;
 const touches = {};
+let tick = 0;
 
 const sol = 385;
 const gravite = 0.55;
@@ -16,7 +19,7 @@ const fille = {
   vy: 0,
   vitesse: 4,
   auSol: true,
-  image: new Image()
+  direction: "right", animTick: 0, landing: 0, jumpAge: 0, image: new Image(), leftImage: new Image()
 };
 
 const garcon = {
@@ -28,11 +31,13 @@ const garcon = {
   vy: 0,
   vitesse: 4,
   auSol: true,
-  image: new Image()
+  direction: "right", animTick: 0, landing: 0, jumpAge: 0, image: new Image(), leftImage: new Image()
 };
 
-fille.image.src = "fille.png";
-garcon.image.src = "garcon.png";
+fille.image.src = "assets/fille/right.png";
+fille.leftImage.src = "assets/fille/left.png";
+garcon.image.src = "assets/garcon/right.png";
+garcon.leftImage.src = "assets/garcon/left.png";
 
 window.addEventListener("keydown", (e) => {
   touches[e.code] = true;
@@ -49,17 +54,25 @@ window.addEventListener("keyup", (e) => {
   touches[e.code] = false;
 });
 
+window.addEventListener("blur", () => { for (const code in touches) touches[code] = false; });
+
 function deplacer(personnage, gauche, droite, saut) {
+  const wasGrounded = personnage.auSol;
+  personnage.animTick++;
+  if (personnage.landing > 0) personnage.landing--;
   personnage.vx = 0;
 
   if (touches[gauche]) personnage.vx = -personnage.vitesse;
   if (touches[droite]) personnage.vx = personnage.vitesse;
 
   if (touches[saut] && personnage.auSol) {
+    personnage.jumpAge = 0;
     personnage.vy = -11;
     personnage.auSol = false;
   }
 
+  if (personnage.vx) personnage.direction = personnage.vx < 0 ? "left" : "right";
+  if (!personnage.auSol) personnage.jumpAge++;
   personnage.x += personnage.vx;
   personnage.vy += gravite;
   personnage.y += personnage.vy;
@@ -68,6 +81,7 @@ function deplacer(personnage, gauche, droite, saut) {
     personnage.y = sol - personnage.hauteur;
     personnage.vy = 0;
     personnage.auSol = true;
+    if (!wasGrounded) personnage.landing = 7;
   }
 
   personnage.x = Math.max(
@@ -76,15 +90,31 @@ function deplacer(personnage, gauche, droite, saut) {
   );
 }
 
-function dessinerPersonnage(personnage) {
-  if (personnage.image.complete && personnage.image.naturalWidth > 0) {
-    ctx.drawImage(
-      personnage.image,
-      personnage.x,
-      personnage.y,
-      personnage.largeur,
-      personnage.hauteur
-    );
+// Rendering only: physics, hitbox and input bindings are preserved.
+function animationFrame(p) {
+  if (!p.auSol) {
+    const frame = p.jumpAge <= 2 ? 0 : p.jumpAge <= 4 ? 1 : p.vy < -2 ? 2 : p.vy <= 2 ? 3 : 4;
+    return [3, frame];
+  }
+  if (p.landing) return [3, 5];
+  // Keep speed=4. Walk for the first 12 simulation ticks, then use run poses.
+  if (p.vx) {
+    p.movingTicks = (p.movingTicks || 0) + 1;
+    return [p.movingTicks < 12 ? 1 : 2, Math.floor(p.animTick / 6) % 6];
+  }
+  p.movingTicks = 0;
+  // Blink briefly; the supplied six-frame idle sequence is intentionally slow.
+  const phase = p.animTick % 240;
+  return [0, phase < 210 ? Math.floor(phase / 35) % 2 : [2,3,4,5][Math.min(3,Math.floor((phase-210)/8))]];
+}
+function dessinerPersonnage(p) {
+  const [row, frame] = animationFrame(p);
+  const image = p.direction === "left" ? p.leftImage : p.image;
+  if (image.complete && image.naturalWidth === 1536) {
+    // Square draw avoids distorting anatomy; feet anchor at y+hauteur.
+    const size = 145;
+    ctx.drawImage(image, frame*256, row*256, 256, 256,
+      p.x + p.largeur/2 - size/2, p.y + p.hauteur - 244/256*size, size, size);
   }
 }
 

@@ -15,6 +15,23 @@
     <section id="accueil" aria-label="Accueil du jeu">
     <canvas id="game" width="800" height="450"></canvas>
 
+    <p id="message">
+      Sur téléphone, utilise les boutons. Le mode paysage offre plus de place.
+    </p>
+    </section>
+    <section id="carte" class="screen" hidden aria-label="Carte des cinq mondes">
+      <div class="map-wrap">
+        <img src="assets/carte-mondes.png" alt="Carte des cinq mondes : Torah, Mathématiques, Anglais, Safa et Trophée" draggable="false">
+        <canvas id="map-game" width="1200" height="400" aria-label="Les personnages se déplacent sur le chemin des cinq mondes"></canvas>
+      </div>
+      <p id="map-status" role="status">Déplace les personnages sur le chemin. Devant Torah, appuie sur W (fille) ou ↑ (garçon) pour entrer. Les autres portails sont verrouillés.</p>
+      <button class="nav-button" id="retour-accueil">← Retour à l’accueil</button>
+    </section>
+    <section id="niveau" class="screen" hidden aria-label="Monde Torah">
+      <h2>Monde 1 — Torah</h2>
+      <p>Le décor et les défis de ce monde seront ajoutés lors de notre prochain atelier.</p>
+      <button class="nav-button" id="retour-carte">← Retour à la carte</button>
+    </section>
     <section class="touch-controls" aria-label="Commandes tactiles">
       <p class="touch-help">Maintiens une flèche pour avancer. Tu peux avancer et sauter en même temps !</p>
       <fieldset><legend>Fille</legend><div class="buttons">
@@ -31,27 +48,6 @@
       </div></fieldset>
     </section>
 
-    <p id="message">
-      Sur téléphone, utilise les boutons. Le mode paysage offre plus de place.
-    </p>
-    </section>
-    <section id="carte" class="screen" hidden aria-label="Carte des cinq mondes">
-      <div class="map-wrap">
-        <img src="assets/carte-mondes.png" alt="Carte des cinq mondes : Torah, Mathématiques, Anglais, Safa et Trophée" draggable="false">
-        <button class="portal" data-world="1" style="left:20.5%" aria-label="Entrer dans le monde Torah"></button>
-        <button class="portal" data-world="2" style="left:40.8%" aria-label="Mathématiques, verrouillé" disabled></button>
-        <button class="portal" data-world="3" style="left:59%" aria-label="Anglais, verrouillé" disabled></button>
-        <button class="portal" data-world="4" style="left:77.2%" aria-label="Safa, verrouillé" disabled></button>
-        <button class="portal" data-world="5" style="left:94%" aria-label="Trophée, verrouillé" disabled></button>
-      </div>
-      <p id="map-status" role="status">Clique sur le portail Torah pour commencer ! Les autres mondes sont verrouillés.</p>
-      <button class="nav-button" id="retour-accueil">← Retour à l’accueil</button>
-    </section>
-    <section id="niveau" class="screen" hidden aria-label="Monde Torah">
-      <h2>Monde 1 — Torah</h2>
-      <p>Le décor et les défis de ce monde seront ajoutés lors de notre prochain atelier.</p>
-      <button class="nav-button" id="retour-carte">← Retour à la carte</button>
-    </section>
   </main>
 
   <script src="game.js"></script>

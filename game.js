@@ -1,6 +1,13 @@
 
 const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+let ctx = canvas.getContext("2d");
+const accueilCtx = ctx;
+const mapCanvas = document.getElementById("map-game");
+const mapCtx = mapCanvas.getContext("2d");
+const MAP_GROUND = 360;
+const MAP_WIDTH = 1200;
+const MAP_PORTALS = [0.205, 0.408, 0.59, 0.772, 0.94].map(x => x * MAP_WIDTH);
+const mapWasUp = { fille: false, garcon: false };
 
 canvas.width = 800;
 canvas.height = 450;
@@ -89,7 +96,7 @@ window.addEventListener("keyup", (e) => {
 
 window.addEventListener("blur", () => { for (const code in touches) touches[code] = false; });
 
-function deplacer(personnage, gauche, droite, saut) {
+function deplacer(personnage, gauche, droite, saut, ground = sol, maxWidth = canvas.width) {
   if (personnage.special) return;
   const wasGrounded = personnage.auSol;
   personnage.animTick++;
@@ -111,8 +118,8 @@ function deplacer(personnage, gauche, droite, saut) {
   personnage.vy += gravite;
   personnage.y += personnage.vy;
 
-  if (personnage.y + personnage.hauteur >= sol) {
-    personnage.y = sol - personnage.hauteur;
+  if (personnage.y + personnage.hauteur >= ground) {
+    personnage.y = ground - personnage.hauteur;
     personnage.vy = 0;
     personnage.auSol = true;
     if (!wasGrounded) personnage.landing = 7;
@@ -120,7 +127,7 @@ function deplacer(personnage, gauche, droite, saut) {
 
   personnage.x = Math.max(
     0,
-    Math.min(canvas.width - personnage.largeur, personnage.x)
+    Math.min(maxWidth - personnage.largeur, personnage.x)
   );
 }
 
@@ -165,6 +172,37 @@ let lastTime = null;
 function dessiner(now) {
   const delta = lastTime === null || !Number.isFinite(now) ? 0 : Math.min(50, Math.max(0, now-lastTime));
   if (Number.isFinite(now)) lastTime = now;
+  // Map is a second playable scene: same characters, same input and animations.
+  if (window.talScreen === "carte") {
+    ctx = mapCtx;
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.clearRect(0,0,mapCanvas.width,mapCanvas.height);
+    const people = [[fille,"KeyA","KeyD","KeyW","fille"],[garcon,"ArrowLeft","ArrowRight","ArrowUp","garcon"]];
+    for (const [p,left,right,up,name] of people) {
+      const pressed = !!(touches[up] || touchesMobiles.has(up));
+      const atPortal = MAP_PORTALS.findIndex(center => Math.abs(p.x + p.largeur/2 - center) < 52);
+      // Up in front of an unlocked door enters it, otherwise it remains a jump.
+      if (pressed && !mapWasUp[name] && p.auSol && atPortal >= 0) {
+        if (atPortal === 0) { window.talEnterWorld?.(1); break; }
+        document.getElementById('map-status').textContent = 'Ce portail est verrouillé. Le monde Torah est ouvert !';
+      }
+      mapWasUp[name] = pressed;
+      deplacer(p,left,right,up,MAP_GROUND,MAP_WIDTH);
+    }
+    if (window.talScreen === 'carte') {
+      ctx.save();
+      ctx.scale(mapCanvas.width / MAP_WIDTH, mapCanvas.height / 400);
+      dessinerPersonnage(fille);
+      dessinerPersonnage(garcon);
+      ctx.restore();
+    }
+    for (const p of [fille,garcon]) if (p.special) avancerSpecial(p,delta);
+    ctx = accueilCtx;
+    requestAnimationFrame(dessiner);
+    return;
+  }
+  if (window.talScreen === 'niveau') { requestAnimationFrame(dessiner); return; }
+  ctx = accueilCtx;
   // Update after rendering so every action starts on its first pose.
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);

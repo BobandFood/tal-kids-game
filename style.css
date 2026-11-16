@@ -27,3 +27,16 @@ button:focus-visible { outline: 3px solid #facc15; outline-offset: 2px; }
   fieldset { padding: 4px 8px 6px; }
   button { min-height: 48px; }
 }
+
+/* Level selection screen; keep existing movement and touch control styling. */
+[hidden] { display: none !important; }
+.screen { max-width: 1600px; margin: 12px auto; }
+.map-wrap { position: relative; width: 100%; aspect-ratio: 3 / 1; }
+.map-wrap img { display: block; width: 100%; height: 100%; object-fit: fill; border-radius: 12px; }
+.portal { position: absolute; top: 23%; transform: translateX(-50%); width: 17%; height: 54%; border: 0; background: transparent; border-radius: 14px; cursor: pointer; touch-action: manipulation; }
+.portal:disabled { cursor: not-allowed; }
+.portal:not(:disabled):focus-visible { outline: 4px solid #ffe44f; outline-offset: 1px; }
+.portal:not(:disabled):hover { background: rgba(255,255,255,.12); }
+.nav-button { margin: 12px; padding: 12px 20px; width: auto; background: #334b7b; cursor: pointer; touch-action: manipulation; }
+#niveau { padding: 60px 20px; min-height: 300px; background: #202d44; border-radius: 16px; }
+#map-status { font-size: 15px; margin: 12px 0 0; }

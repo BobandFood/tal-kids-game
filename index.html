@@ -33,7 +33,7 @@
     </section>
     <section id="niveau" class="screen" hidden aria-label="Monde Torah">
       <h2 id="world-title">Monde 1 — Torah</h2>
-      <p>Le décor et les défis de ce monde seront ajoutés lors de notre prochain atelier.</p>
+      <div id="desert-stage"><p>Traverse le désert ! Saute sur les plateformes et avance jusqu’au bout.</p><p id="level-hud" aria-label="Progression"></p><canvas id="level-game" width="800" height="450" aria-label="Niveau 1 : aventure dans le désert"></canvas><p id="level-status" role="status"></p></div><p id="world-placeholder" hidden>Ce monde sera ajouté lors d’un prochain atelier.</p>
       <button class="nav-button" id="retour-carte">← Retour à la carte</button>
     </section>
     <section class="touch-controls" aria-label="Commandes tactiles">
@@ -56,6 +56,7 @@
 
   <script src="game.js"></script>
   <script src="mobile-controls.js"></script>
+  <script src="desert.js"></script>
   <script src="navigation.js"></script>
 </body>
 </html>

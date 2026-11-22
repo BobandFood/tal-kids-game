@@ -35,7 +35,7 @@
   function show(name) {
     Object.entries(screens).forEach(([id, element]) => element.hidden = id !== name);
     window.talScreen = name;
-    controls.hidden = name === 'niveau';
+    controls.hidden = name === 'niveau' && document.getElementById('desert-stage').hidden;
     resetInputs();
   }
   window.talOpenMap = () => {
@@ -50,6 +50,9 @@
     if (window.talScreen !== 'carte') return;
     if (!window.talProgress.isUnlocked(world)) { status.textContent='Ce monde est encore verrouillé !'; return; }
     document.getElementById('world-title').textContent = `Monde ${world} — ${portalNames[world-1]}`;
+    document.getElementById('desert-stage').hidden = world !== 1;
+    document.getElementById('world-placeholder').hidden = world === 1;
+    if (world === 1) window.talStartDesert();
     show('niveau');
   };
   document.getElementById('retour-accueil').addEventListener('click', () => {
@@ -58,5 +61,5 @@
     }
     show('accueil');
   });
-  document.getElementById('retour-carte').addEventListener('click', () => { show('carte'); window.talUpdatePortalLights(); });
+  document.getElementById('retour-carte').addEventListener('click', () => { for (const [p,x] of [[fille, MAP_PORTALS[0]-70],[garcon, MAP_PORTALS[0]+20]]) { p.x=x; p.y=MAP_GROUND-p.hauteur; p.vx=p.vy=0; p.auSol=true; p.special=null; } show('carte'); window.talUpdatePortalLights(); });
 })();

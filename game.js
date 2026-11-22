@@ -231,7 +231,7 @@ function dessiner(now) {
     requestAnimationFrame(dessiner);
     return;
   }
-  if (window.talScreen === 'niveau') { requestAnimationFrame(dessiner); return; }
+  if (window.talScreen === 'niveau') { if (!document.getElementById('desert-stage').hidden) window.talDrawDesert(delta); requestAnimationFrame(dessiner); return; }
   ctx = accueilCtx;
   // Update after rendering so every action starts on its first pose.
 

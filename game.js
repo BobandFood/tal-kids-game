@@ -8,6 +8,23 @@ const MAP_GROUND = 360;
 const MAP_WIDTH = 1200;
 const MAP_PORTALS = [0.205, 0.408, 0.59, 0.772, 0.94].map(x => x * MAP_WIDTH);
 const mapWasUp = { fille: false, garcon: false };
+const portalLights = document.getElementById('portal-lights');
+const portalEls = MAP_PORTALS.map((center, i) => {
+  const light = document.createElement('div');
+  light.className = 'portal-light';
+  light.style.left = `${center / MAP_WIDTH * 100}%`;
+  portalLights.appendChild(light);
+  return light;
+});
+window.talUpdatePortalLights = function() {
+  const progress = window.talProgress;
+  for (let i=0; i<portalEls.length; i++) {
+    const completed = !!progress?.isCompleted(i+1);
+    const near = [fille,garcon].some(p => Math.abs(p.x + p.largeur/2 - MAP_PORTALS[i]) < 52);
+    portalEls[i].classList.toggle('active', near || completed);
+    portalEls[i].classList.toggle('completed', completed);
+  }
+};
 
 canvas.width = 800;
 canvas.height = 450;
@@ -183,13 +200,14 @@ function dessiner(now) {
       const atPortal = MAP_PORTALS.findIndex(center => Math.abs(p.x + p.largeur/2 - center) < 52);
       // Up in front of an unlocked door enters it, otherwise it remains a jump.
       if (pressed && !mapWasUp[name] && p.auSol && atPortal >= 0) {
-        if (atPortal === 0) { window.talEnterWorld?.(1); break; }
+        if (window.talProgress?.isUnlocked(atPortal+1)) { window.talEnterWorld?.(atPortal+1); break; }
         document.getElementById('map-status').textContent = 'Ce portail est verrouillé. Le monde Torah est ouvert !';
       }
       mapWasUp[name] = pressed;
       deplacer(p,left,right,up,MAP_GROUND,MAP_WIDTH);
     }
     if (window.talScreen === 'carte') {
+      window.talUpdatePortalLights?.();
       ctx.save();
       ctx.scale(mapCanvas.width / MAP_WIDTH, mapCanvas.height / 400);
       dessinerPersonnage(fille);

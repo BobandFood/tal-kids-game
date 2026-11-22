@@ -245,7 +245,7 @@ function dessiner(now) {
   ctx.fillText("Garçon : ← / → / ↑ • ↓ : Siiiu", 605, 80);
 
   if (window.talScreen === "accueil") {
-  deplacer(fille, "KeyA", "KeyD", "KeyW", "KeyS", "ArrowDown");
+  deplacer(fille, "KeyA", "KeyD", "KeyW");
   deplacer(garcon, "ArrowLeft", "ArrowRight", "ArrowUp");
 
   if (fille.x >= canvas.width - fille.largeur - 1 || garcon.x >= canvas.width - garcon.largeur - 1) {

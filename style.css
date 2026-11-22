@@ -56,3 +56,7 @@ button:focus-visible { outline: 3px solid #facc15; outline-offset: 2px; }
 .portal-light.active { background:radial-gradient(ellipse,#fffbd0 0%,#ffde42 55%,#e68b09 100%); box-shadow:0 0 9px 4px #ffd139c0,0 0 24px 7px #ffb90085; }
 .portal-light.completed { background:radial-gradient(ellipse,#fff 0%,#ffe97c 48%,#ff9f00 100%); box-shadow:0 0 12px 5px #ffde43,0 0 28px 12px #ffc02890; }
 #map-game { z-index:3; }
+
+/* Locks are independent of the artwork and follow saved progress. */
+#portal-locks { position:absolute; inset:0; z-index:2; pointer-events:none; }
+.portal-lock { position:absolute; top:66%; transform:translate(-50%,-50%); font-size:clamp(20px,4vw,52px); line-height:1; filter:drop-shadow(0 2px 3px #000a); }

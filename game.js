@@ -9,6 +9,17 @@ const MAP_WIDTH = 1200;
 const MAP_PORTALS = [0.205, 0.408, 0.59, 0.772, 0.94].map(x => x * MAP_WIDTH);
 const mapWasUp = { fille: false, garcon: false };
 const portalLights = document.getElementById('portal-lights');
+const portalLocks = document.getElementById('portal-locks');
+const portalNames = ['Torah', 'Mathématiques', 'Anglais', 'Hébreu', 'Trophée'];
+const lockEls = MAP_PORTALS.map((center, i) => {
+  const lock = document.createElement('span');
+  lock.className = 'portal-lock';
+  lock.style.left = `${center / MAP_WIDTH * 100}%`;
+  lock.textContent = '🔒';
+  lock.setAttribute('aria-label', `${portalNames[i]} verrouillé`);
+  portalLocks.appendChild(lock);
+  return lock;
+});
 const portalEls = MAP_PORTALS.map((center, i) => {
   const light = document.createElement('div');
   light.className = 'portal-light';
@@ -23,6 +34,7 @@ window.talUpdatePortalLights = function() {
     const near = [fille,garcon].some(p => Math.abs(p.x + p.largeur/2 - MAP_PORTALS[i]) < 52);
     portalEls[i].classList.toggle('active', near || completed);
     portalEls[i].classList.toggle('completed', completed);
+    lockEls[i].hidden = !!progress?.isUnlocked(i + 1);
   }
 };
 
@@ -201,7 +213,7 @@ function dessiner(now) {
       // Up in front of an unlocked door enters it, otherwise it remains a jump.
       if (pressed && !mapWasUp[name] && p.auSol && atPortal >= 0) {
         if (window.talProgress?.isUnlocked(atPortal+1)) { window.talEnterWorld?.(atPortal+1); break; }
-        document.getElementById('map-status').textContent = 'Ce portail est verrouillé. Le monde Torah est ouvert !';
+        document.getElementById('map-status').textContent = 'Ce portail est verrouillé. Termine le monde précédent pour l’ouvrir !';
       }
       mapWasUp[name] = pressed;
       deplacer(p,left,right,up,MAP_GROUND,MAP_WIDTH);

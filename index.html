@@ -25,13 +25,14 @@
         <div class="hud hud-lives" aria-label="Vies restantes"><span id="tal-hearts">❤️ ❤️ ❤️</span></div>
         <div class="hud hud-stars" aria-label="Étoiles collectées">⭐ <span id="tal-stars">0 / 50</span></div>
         <div id="portal-lights" aria-hidden="true"></div>
+        <div id="portal-locks" aria-label="État des portails"></div>
         <canvas id="map-game" width="1200" height="400" aria-label="Les personnages se déplacent sur le chemin des cinq mondes"></canvas>
       </div>
       <p id="map-status" role="status">Déplace les personnages sur le chemin. Devant Torah, appuie sur W (fille) ou ↑ (garçon) pour entrer. Les autres portails sont verrouillés.</p>
       <button class="nav-button" id="retour-accueil">← Retour à l’accueil</button>
     </section>
     <section id="niveau" class="screen" hidden aria-label="Monde Torah">
-      <h2>Monde 1 — Torah</h2>
+      <h2 id="world-title">Monde 1 — Torah</h2>
       <p>Le décor et les défis de ce monde seront ajoutés lors de notre prochain atelier.</p>
       <button class="nav-button" id="retour-carte">← Retour à la carte</button>
     </section>

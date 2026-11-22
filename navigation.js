@@ -7,7 +7,10 @@
   const SAVE_KEY = 'tal-kids-progress-v1';
   let saved = {};
   try { saved = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}') || {}; } catch (_) {}
-  const state = { lives: Math.max(0, Math.min(3, Number(saved.lives ?? 3))), stars: Math.max(0, Math.min(50, Number(saved.stars ?? 0))), completed: Array.isArray(saved.completed) ? saved.completed.filter(n => Number.isInteger(n) && n >= 1 && n <= 5) : [] };
+  const bounded = (value, fallback, max) => Number.isFinite(Number(value)) ? Math.max(0, Math.min(max, Math.floor(Number(value)))) : fallback;
+  const completed = [];
+  for (let id = 1; id <= 5 && Array.isArray(saved.completed) && saved.completed.includes(id); id++) completed.push(id);
+  const state = { lives: bounded(saved.lives ?? 3, 3, 3), stars: bounded(saved.stars ?? 0, 0, 50), completed }; 
   function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (_) {} }
   function renderHud() {
     document.getElementById('tal-hearts').textContent = Array.from({length:3}, (_,i)=>i<state.lives?'❤️':'🩶').join(' ');
@@ -19,13 +22,14 @@
     loseLife: () => { state.lives=Math.max(0,state.lives-1);persist();renderHud(); },
     restoreLife: () => { state.lives=Math.min(3,state.lives+1);persist();renderHud(); },
     completeWorld: id => { if (!Number.isInteger(id)||id<1||id>5 || (id>1&&!state.completed.includes(id-1))) return false; if(!state.completed.includes(id))state.completed.push(id);persist();window.talUpdatePortalLights?.();return true; },
-    isUnlocked: id => id===1 || state.completed.includes(id-1),
+    isUnlocked: id => Number.isInteger(id) && id >= 1 && id <= 5 && (id === 1 || state.completed.includes(id-1)),
     isCompleted: id => state.completed.includes(id)
   };
   renderHud();
   function resetInputs() {
     for (const key in touches) touches[key] = false;
     touchesMobiles.clear();
+    mapWasUp.fille = mapWasUp.garcon = false;
     document.querySelectorAll('.is-pressed').forEach(button => button.classList.remove('is-pressed'));
   }
   function show(name) {
@@ -45,6 +49,7 @@
   window.talEnterWorld = (world) => {
     if (window.talScreen !== 'carte') return;
     if (!window.talProgress.isUnlocked(world)) { status.textContent='Ce monde est encore verrouillé !'; return; }
+    document.getElementById('world-title').textContent = `Monde ${world} — ${portalNames[world-1]}`;
     show('niveau');
   };
   document.getElementById('retour-accueil').addEventListener('click', () => {
@@ -53,5 +58,5 @@
     }
     show('accueil');
   });
-  document.getElementById('retour-carte').addEventListener('click', () => show('carte'));
+  document.getElementById('retour-carte').addEventListener('click', () => { show('carte'); window.talUpdatePortalLights(); });
 })();

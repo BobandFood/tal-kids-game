@@ -1,0 +1,291 @@
+{
+  "cell": {
+    "width": 256,
+    "height": 256
+  },
+  "columns": 6,
+  "anchor": {
+    "x": 128,
+    "y": 244
+  },
+  "coordinates": "source pixels; rows and frames are zero-based",
+  "monsters": {
+    "epeiste": {
+      "directions": {
+        "right": {
+          "movement": "epeiste/right.png",
+          "action": "epeiste/action-right.png",
+          "defeat": "epeiste/defeat-right.png"
+        },
+        "left": {
+          "movement": "epeiste/left.png",
+          "action": "epeiste/action-left.png",
+          "defeat": "epeiste/defeat-left.png"
+        }
+      },
+      "animations": {
+        "idle": {
+          "sheet": "movement",
+          "row": 0,
+          "ms": [
+            150,
+            150,
+            150,
+            150,
+            150,
+            150
+          ],
+          "loop": true
+        },
+        "walk": {
+          "sheet": "movement",
+          "row": 1,
+          "ms": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "loop": true
+        },
+        "run": {
+          "sheet": "movement",
+          "row": 2,
+          "ms": [
+            65,
+            65,
+            65,
+            65,
+            65,
+            65
+          ],
+          "loop": true
+        },
+        "jump": {
+          "sheet": "movement",
+          "row": 3,
+          "firstFrame": 0,
+          "frameCount": 3,
+          "ms": [
+            80,
+            100,
+            110
+          ]
+        },
+        "fall": {
+          "sheet": "movement",
+          "row": 3,
+          "firstFrame": 3,
+          "frameCount": 2,
+          "ms": [
+            100,
+            130
+          ],
+          "holdLast": true
+        },
+        "land": {
+          "sheet": "movement",
+          "row": 3,
+          "firstFrame": 5,
+          "frameCount": 1,
+          "ms": [
+            90
+          ]
+        },
+        "attack": {
+          "sheet": "action",
+          "row": 0,
+          "ms": [
+            115,
+            115,
+            125,
+            90,
+            115,
+            155
+          ],
+          "activeFrame": 3
+        },
+        "hit": {
+          "sheet": "action",
+          "row": 1,
+          "ms": [
+            65,
+            75,
+            85,
+            85,
+            85,
+            90
+          ]
+        },
+        "defeat": {
+          "sheet": "defeat",
+          "row": 0,
+          "ms": [
+            85,
+            95,
+            100,
+            120,
+            130,
+            130
+          ]
+        }
+      }
+    },
+    "tireur": {
+      "directions": {
+        "right": {
+          "movement": "tireur/right.png",
+          "action": "tireur/action-right.png",
+          "defeat": "tireur/defeat-right.png"
+        },
+        "left": {
+          "movement": "tireur/left.png",
+          "action": "tireur/action-left.png",
+          "defeat": "tireur/defeat-left.png"
+        }
+      },
+      "animations": {
+        "idle": {
+          "sheet": "movement",
+          "row": 0,
+          "ms": [
+            150,
+            150,
+            150,
+            150,
+            150,
+            150
+          ],
+          "loop": true
+        },
+        "walk": {
+          "sheet": "movement",
+          "row": 1,
+          "ms": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "loop": true
+        },
+        "run": {
+          "sheet": "movement",
+          "row": 2,
+          "ms": [
+            65,
+            65,
+            65,
+            65,
+            65,
+            65
+          ],
+          "loop": true
+        },
+        "jump": {
+          "sheet": "movement",
+          "row": 3,
+          "firstFrame": 0,
+          "frameCount": 3,
+          "ms": [
+            80,
+            100,
+            110
+          ]
+        },
+        "fall": {
+          "sheet": "movement",
+          "row": 3,
+          "firstFrame": 3,
+          "frameCount": 2,
+          "ms": [
+            100,
+            130
+          ],
+          "holdLast": true
+        },
+        "land": {
+          "sheet": "movement",
+          "row": 3,
+          "firstFrame": 5,
+          "frameCount": 1,
+          "ms": [
+            90
+          ]
+        },
+        "attack": {
+          "sheet": "action",
+          "row": 0,
+          "ms": [
+            115,
+            115,
+            125,
+            90,
+            115,
+            155
+          ],
+          "activeFrame": 3,
+          "projectileFrame": 3,
+          "muzzleOffset": {
+            "right": {
+              "x": 78,
+              "y": -85
+            },
+            "left": {
+              "x": -78,
+              "y": -85
+            }
+          }
+        },
+        "hit": {
+          "sheet": "action",
+          "row": 1,
+          "ms": [
+            65,
+            75,
+            85,
+            85,
+            85,
+            90
+          ]
+        },
+        "defeat": {
+          "sheet": "defeat",
+          "row": 0,
+          "ms": [
+            85,
+            95,
+            100,
+            120,
+            130,
+            130
+          ]
+        }
+      }
+    }
+  },
+  "projectile": {
+    "anchor": {
+      "x": 128,
+      "y": 128
+    },
+    "row": 0,
+    "ms": [
+      50,
+      50,
+      50,
+      50,
+      50,
+      50
+    ],
+    "loop": true,
+    "directions": {
+      "right": "projectile/right.png",
+      "left": "projectile/left.png"
+    }
+  }
+}
